@@ -31,6 +31,9 @@ shap_feature_importance.csv
 # Local graph/cache outputs
 graphify-out/
 
+# Local agent/project metadata
+.atl/
+
 # LaTeX build artifacts
 *.aux
 *.bbl
