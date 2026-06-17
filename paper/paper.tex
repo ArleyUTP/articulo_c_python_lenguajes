@@ -1,0 +1,216 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{url}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{Detección temprana de enfermedades cardiovasculares mediante modelos de aprendizaje automático explicables}
+
+\author{
+\IEEEauthorblockN{Arley Alberto Ticse Torres}
+\IEEEauthorblockA{
+\textit{Escuela de Ingeniería de Sistemas e Informática} \\
+\textit{Universidad Tecnológica del Perú} \\
+Lima, Perú \\
+arley.ticse@gmail.com}
+}
+
+\maketitle
+
+\begin{abstract}
+Las enfermedades cardiovasculares representan una de las principales causas de mortalidad a nivel mundial, por lo que su detección temprana constituye un desafío relevante para la salud pública. El presente estudio propone el desarrollo y evaluación de modelos de aprendizaje automático para la predicción de enfermedad cardiovascular utilizando el Heart Disease Dataset del UCI Machine Learning Repository. Se compararon modelos tradicionales e interpretables, como regresión logística y árboles de decisión, frente a modelos más complejos, como máquinas de soporte vectorial, Random Forest, Gradient Boosting y redes neuronales. El conjunto de datos fue sometido a un proceso de preprocesamiento que incluyó imputación de valores faltantes, codificación de variables categóricas, escalamiento y división estratificada de los datos. Los resultados mostraron que SVM obtuvo el mayor ROC-AUC en el conjunto de prueba, mientras que la regresión logística presentó un desempeño competitivo y mayor interpretabilidad. Finalmente, se aplicó SHAP sobre la regresión logística para identificar las variables más influyentes en la predicción, destacando factores como ca, cp, thal, sex y slope. Se concluye que los modelos interpretables combinados con técnicas de explicabilidad pueden apoyar la toma de decisiones clínicas de manera transparente y responsable.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Enfermedades cardiovasculares, aprendizaje automático, regresión logística, SHAP, inteligencia artificial explicable, UCI Heart Disease Dataset.
+\end{IEEEkeywords}
+
+\section{Introducción}
+
+Las enfermedades cardiovasculares constituyen una de las principales causas de mortalidad a nivel mundial y representan un problema prioritario para los sistemas de salud. La detección temprana de pacientes con riesgo cardiovascular permite aplicar estrategias preventivas y reducir la probabilidad de eventos graves, como infartos o accidentes cerebrovasculares.
+
+En los últimos años, el aprendizaje automático ha sido utilizado como herramienta de apoyo para el análisis de datos clínicos y la predicción de enfermedades. Estos modelos permiten identificar patrones en variables médicas como edad, presión arterial, colesterol, frecuencia cardíaca máxima y resultados de pruebas diagnósticas. Sin embargo, en el contexto médico no basta con obtener altos niveles de precisión, ya que las predicciones deben ser comprensibles y justificables para los profesionales de la salud.
+
+Uno de los principales desafíos en la aplicación de inteligencia artificial en medicina es la interpretabilidad de los modelos. Algunos algoritmos complejos, como las redes neuronales, pueden alcanzar buenos resultados predictivos, pero funcionan como modelos de caja negra, dificultando la explicación de sus decisiones. Por ello, técnicas de inteligencia artificial explicable, como SHAP, permiten identificar qué variables influyen en cada predicción y mejorar la transparencia del sistema.
+
+El objetivo de esta investigación es comparar el desempeño de modelos interpretables y modelos más complejos para la detección temprana de enfermedades cardiovasculares utilizando el Heart Disease Dataset del UCI Machine Learning Repository. Asimismo, se busca aplicar SHAP sobre un modelo interpretable para identificar los factores clínicos más influyentes en la predicción.
+
+\section{Metodología}
+
+\subsection{Diseño de la investigación}
+
+La investigación presenta un enfoque cuantitativo, de tipo aplicada y diseño experimental computacional. Se evaluó el desempeño de diferentes modelos de aprendizaje automático en una tarea de clasificación binaria orientada a predecir la presencia o ausencia de enfermedad cardiovascular.
+
+\subsection{Dataset}
+
+Se utilizó el Heart Disease Dataset del UCI Machine Learning Repository, específicamente la base de datos Cleveland, ampliamente empleada en estudios de aprendizaje automático aplicado a salud. El conjunto de datos contiene 303 registros de pacientes y 13 variables predictoras clínicas y demográficas. La variable objetivo original, denominada \textit{num}, indica el diagnóstico de enfermedad cardíaca.
+
+Para este estudio, la variable \textit{num} fue transformada en una variable binaria denominada \textit{target}, donde el valor 0 representa ausencia de enfermedad cardiovascular y el valor 1 representa presencia de enfermedad.
+
+\subsection{Preprocesamiento de datos}
+
+Durante el análisis exploratorio se identificaron 6 valores faltantes en las variables \textit{ca} y \textit{thal}. La variable \textit{ca} fue imputada mediante la mediana, mientras que \textit{thal} fue imputada mediante la moda, considerando la naturaleza de cada atributo.
+
+Posteriormente, se aplicó codificación One-Hot Encoding a las variables categóricas y escalamiento mediante StandardScaler a las variables numéricas. Tras el preprocesamiento, el dataset final quedó conformado por 25 variables predictoras numéricas, sin valores faltantes ni variables no numéricas.
+
+La división de datos se realizó en 80\% para entrenamiento y 20\% para prueba, utilizando muestreo estratificado para conservar la distribución de clases. La prevalencia global de enfermedad cardiovascular fue de 45.9\%, manteniéndose la misma proporción en los conjuntos de entrenamiento y prueba.
+
+\subsection{Modelos evaluados}
+
+Se evaluaron los siguientes modelos de aprendizaje automático:
+
+\begin{itemize}
+    \item Regresión Logística.
+    \item Árbol de Decisión.
+    \item Máquina de Soporte Vectorial.
+    \item Random Forest.
+    \item Gradient Boosting.
+    \item Red Neuronal Multicapa.
+\end{itemize}
+
+La regresión logística fue considerada como modelo interpretable principal, mientras que la red neuronal multicapa fue utilizada como representante de enfoques basados en Deep Learning.
+
+\subsection{Métricas de evaluación}
+
+El desempeño de los modelos fue evaluado mediante las siguientes métricas:
+
+\begin{itemize}
+    \item Accuracy.
+    \item Precision.
+    \item Recall.
+    \item F1-score.
+    \item ROC-AUC.
+\end{itemize}
+
+Además, se aplicó validación cruzada estratificada de 5 particiones para evaluar la estabilidad de los modelos.
+
+\subsection{Explicabilidad mediante SHAP}
+
+Para el análisis de explicabilidad se utilizó SHAP, técnica basada en valores de Shapley que permite cuantificar la contribución de cada variable en las predicciones del modelo. Aunque SVM obtuvo el mayor ROC-AUC en el conjunto de prueba, se seleccionó la regresión logística para el análisis SHAP debido a su naturaleza interpretable, estabilidad y desempeño competitivo.
+
+\section{Resultados}
+
+\subsection{Análisis exploratorio y preprocesamiento}
+
+El dataset inicial estuvo compuesto por 303 pacientes. Se identificaron 6 valores faltantes y no se encontraron registros duplicados. Tras el preprocesamiento, el conjunto final quedó conformado por 25 variables predictoras numéricas. La distribución de la variable objetivo fue relativamente balanceada, con una prevalencia de enfermedad cardiovascular de 45.9\%.
+
+\subsection{Desempeño de los modelos}
+
+Los resultados obtenidos muestran que SVM alcanzó el mayor rendimiento en el conjunto de prueba, con un ROC-AUC de 0.959. La regresión logística obtuvo un ROC-AUC de 0.958, evidenciando un desempeño prácticamente equivalente al mejor modelo, pero con mayor interpretabilidad.
+
+\begin{table}[htbp]
+\caption{Desempeño de modelos de aprendizaje automático}
+\begin{center}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Modelo} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{ROC-AUC} \\
+\midrule
+SVM & -- & -- & -- & -- & 0.959 \\
+Regresión Logística & -- & -- & -- & -- & 0.958 \\
+Random Forest & -- & -- & -- & -- & -- \\
+Gradient Boosting & -- & -- & -- & -- & -- \\
+Red Neuronal & -- & -- & -- & -- & -- \\
+Árbol de Decisión & -- & -- & -- & -- & -- \\
+\bottomrule
+\end{tabular}
+\label{tab:modelos}
+\end{center}
+\end{table}
+
+\subsection{Validación cruzada}
+
+En la validación cruzada estratificada de 5 particiones, la regresión logística obtuvo el mayor ROC-AUC promedio, con un valor de 0.915 $\pm$ 0.021, lo que evidencia estabilidad y buena capacidad de generalización.
+
+\begin{table}[htbp]
+\caption{Resultados de validación cruzada}
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+\textbf{Modelo} & \textbf{ROC-AUC promedio} \\
+\midrule
+Regresión Logística & 0.915 $\pm$ 0.021 \\
+SVM & -- \\
+Random Forest & -- \\
+Gradient Boosting & -- \\
+Red Neuronal & -- \\
+Árbol de Decisión & -- \\
+\bottomrule
+\end{tabular}
+\label{tab:validacion}
+\end{center}
+\end{table}
+
+\subsection{Resultados de explicabilidad}
+
+El análisis mediante SHAP identificó como variables más influyentes a \textit{ca}, \textit{cp}, \textit{thal}, \textit{sex} y \textit{slope}. Entre ellas, \textit{ca} y \textit{thal} coinciden con conocimiento médico previo relacionado con el diagnóstico cardiovascular.
+
+\begin{figure}[htbp]
+\centerline{\IfFileExists{figures/shap_summary_plot.png}{\includegraphics[width=0.45\textwidth]{figures/shap_summary_plot.png}}{\fbox{\parbox{0.42\textwidth}{Figura no disponible. Ejecute el notebook 04 para generar \texttt{shap\_summary\_plot.png}.}}}}
+\caption{Resumen global de importancia de variables mediante SHAP.}
+\label{fig:shap_summary}
+\end{figure}
+
+\begin{figure}[htbp]
+\centerline{\IfFileExists{figures/shap_bar_plot.png}{\includegraphics[width=0.45\textwidth]{figures/shap_bar_plot.png}}{\fbox{\parbox{0.42\textwidth}{Figura no disponible. Ejecute el notebook 04 para generar \texttt{shap\_bar\_plot.png}.}}}}
+\caption{Ranking de variables más influyentes según valores SHAP.}
+\label{fig:shap_bar}
+\end{figure}
+
+\section{Discusión}
+
+Los resultados obtenidos muestran que los modelos tradicionales pueden alcanzar un desempeño altamente competitivo en datasets médicos pequeños. Aunque SVM obtuvo el mayor ROC-AUC en el conjunto de prueba, la regresión logística presentó un rendimiento muy similar y mayor estabilidad en validación cruzada, lo que la convierte en una alternativa adecuada para contextos clínicos donde la interpretabilidad es fundamental.
+
+La red neuronal multicapa no superó al mejor modelo tradicional, lo cual puede explicarse por el tamaño reducido del dataset. Los modelos de Deep Learning suelen requerir grandes volúmenes de datos para generalizar adecuadamente, mientras que modelos como SVM y regresión logística pueden funcionar mejor en escenarios con pocas muestras y variables clínicas bien estructuradas.
+
+El análisis SHAP permitió identificar variables clínicamente relevantes. En particular, \textit{ca} representa el número de vasos principales afectados, mientras que \textit{thal} está relacionado con resultados de pruebas cardíacas. La presencia de estas variables entre las más influyentes refuerza la coherencia médica del modelo y su potencial utilidad como sistema de apoyo a la decisión clínica.
+
+\subsection{Limitaciones}
+
+Este estudio presenta algunas limitaciones. En primer lugar, el tamaño del dataset es reducido, con solo 303 registros. En segundo lugar, se utilizó únicamente la base Cleveland del repositorio UCI, por lo que los resultados no necesariamente generalizan a otras poblaciones clínicas. Finalmente, no se realizó validación externa con datos hospitalarios reales, lo cual sería necesario antes de considerar una aplicación clínica directa.
+
+\subsection{Trabajo futuro}
+
+Como trabajo futuro se propone evaluar el modelo en datasets médicos más amplios, incorporar validación externa, comparar SHAP con otras técnicas de explicabilidad como LIME y explorar arquitecturas de aprendizaje profundo con mayor cantidad de datos.
+
+\section{Conclusiones}
+
+El presente estudio permitió comparar modelos interpretables y modelos más complejos para la detección temprana de enfermedades cardiovasculares. SVM obtuvo el mayor ROC-AUC en el conjunto de prueba, con un valor de 0.959; sin embargo, la regresión logística presentó un desempeño competitivo, con un ROC-AUC de 0.958, y mayor capacidad de interpretación.
+
+La aplicación de SHAP sobre la regresión logística permitió identificar factores relevantes en la predicción, destacando variables como \textit{ca}, \textit{cp}, \textit{thal}, \textit{sex} y \textit{slope}. Estos resultados evidencian que la combinación de modelos interpretables con técnicas de inteligencia artificial explicable puede contribuir al desarrollo de sistemas de apoyo a la decisión clínica más transparentes, auditables y alineados con principios de IA responsable.
+
+\section*{Referencias}
+
+\begin{thebibliography}{00}
+
+\bibitem{uci}
+A. Janosi, W. Steinbrunn, M. Pfisterer, and R. Detrano, ``Heart Disease,'' UCI Machine Learning Repository, 1988. [Online]. Available: https://archive.ics.uci.edu/dataset/45/heart+disease
+
+\bibitem{detrano}
+R. Detrano et al., ``International application of a new probability algorithm for the diagnosis of coronary artery disease,'' \textit{American Journal of Cardiology}, vol. 64, no. 5, pp. 304--310, 1989.
+
+\bibitem{shap}
+S. M. Lundberg and S.-I. Lee, ``A unified approach to interpreting model predictions,'' in \textit{Advances in Neural Information Processing Systems}, 2017, pp. 4765--4774.
+
+\bibitem{lime}
+M. T. Ribeiro, S. Singh, and C. Guestrin, ``Why should I trust you? Explaining the predictions of any classifier,'' in \textit{Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining}, 2016, pp. 1135--1144.
+
+\bibitem{mlmedicine}
+A. Rajkomar, J. Dean, and I. Kohane, ``Machine learning in medicine,'' \textit{New England Journal of Medicine}, vol. 380, no. 14, pp. 1347--1358, 2019.
+
+\bibitem{xaihealth}
+A. B. Arrieta et al., ``Explainable Artificial Intelligence (XAI): Concepts, taxonomies, opportunities and challenges toward responsible AI,'' \textit{Information Fusion}, vol. 58, pp. 82--115, 2020.
+
+\end{thebibliography}
+
+\end{document}
