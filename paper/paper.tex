@@ -97,7 +97,7 @@ Además, se aplicó validación cruzada estratificada de 5 particiones para eval
 
 \subsection{Explicabilidad mediante SHAP}
 
-Para el análisis de explicabilidad se utilizó SHAP, técnica basada en valores de Shapley que permite cuantificar la contribución de cada variable en las predicciones del modelo. Aunque SVM obtuvo el mayor ROC-AUC en el conjunto de prueba, se seleccionó la regresión logística para el análisis SHAP debido a su naturaleza interpretable, estabilidad y desempeño competitivo.
+Para el análisis de explicabilidad se utilizó SHAP, técnica basada en valores de Shapley que permite cuantificar la contribución de cada variable en las predicciones del modelo. Aunque la selección automática por ROC-AUC identificó a SVM como el mejor modelo en prueba, se seleccionó la regresión logística para el análisis SHAP debido a su naturaleza interpretable, estabilidad en validación cruzada y desempeño competitivo, priorizando criterios de IA responsable en salud.
 
 \section{Resultados}
 
@@ -112,18 +112,20 @@ Los resultados obtenidos muestran que SVM alcanzó el mayor rendimiento en el co
 \begin{table}[htbp]
 \caption{Desempeño de modelos de aprendizaje automático}
 \begin{center}
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{lccccc}
 \toprule
 \textbf{Modelo} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{ROC-AUC} \\
 \midrule
-SVM & -- & -- & -- & -- & 0.959 \\
-Regresión Logística & -- & -- & -- & -- & 0.958 \\
-Random Forest & -- & -- & -- & -- & -- \\
-Gradient Boosting & -- & -- & -- & -- & -- \\
-Red Neuronal & -- & -- & -- & -- & -- \\
-Árbol de Decisión & -- & -- & -- & -- & -- \\
+SVM & 0.902 & 0.867 & 0.929 & 0.897 & 0.959 \\
+Regresión Logística & 0.869 & 0.812 & 0.929 & 0.867 & 0.958 \\
+Gradient Boosting & 0.885 & 0.839 & 0.929 & 0.881 & 0.944 \\
+Red Neuronal & 0.869 & 0.812 & 0.929 & 0.867 & 0.943 \\
+Random Forest & 0.869 & 0.833 & 0.893 & 0.862 & 0.935 \\
+Árbol de Decisión & 0.754 & 0.686 & 0.857 & 0.762 & 0.762 \\
 \bottomrule
 \end{tabular}
+}
 \label{tab:modelos}
 \end{center}
 \end{table}
@@ -140,11 +142,11 @@ En la validación cruzada estratificada de 5 particiones, la regresión logísti
 \textbf{Modelo} & \textbf{ROC-AUC promedio} \\
 \midrule
 Regresión Logística & 0.915 $\pm$ 0.021 \\
-SVM & -- \\
-Random Forest & -- \\
-Gradient Boosting & -- \\
-Red Neuronal & -- \\
-Árbol de Decisión & -- \\
+Random Forest & 0.907 $\pm$ 0.022 \\
+SVM & 0.902 $\pm$ 0.035 \\
+Gradient Boosting & 0.884 $\pm$ 0.020 \\
+Red Neuronal & 0.880 $\pm$ 0.026 \\
+Árbol de Decisión & 0.772 $\pm$ 0.062 \\
 \bottomrule
 \end{tabular}
 \label{tab:validacion}
@@ -153,16 +155,16 @@ Red Neuronal & -- \\
 
 \subsection{Resultados de explicabilidad}
 
-El análisis mediante SHAP identificó como variables más influyentes a \textit{ca}, \textit{cp}, \textit{thal}, \textit{sex} y \textit{slope}. Entre ellas, \textit{ca} y \textit{thal} coinciden con conocimiento médico previo relacionado con el diagnóstico cardiovascular.
+El análisis mediante SHAP identificó como variables más influyentes a \textit{ca}, \textit{cp}, \textit{thal}, \textit{sex} y \textit{slope}. Las variables categóricas fueron reportadas de forma agregada a partir de sus columnas codificadas mediante One-Hot Encoding, por ejemplo \textit{cp}, \textit{thal}, \textit{sex} y \textit{slope}. Entre ellas, \textit{ca} y \textit{thal} coinciden con conocimiento médico previo relacionado con el diagnóstico cardiovascular.
 
 \begin{figure}[htbp]
-\centerline{\IfFileExists{figures/shap_summary_plot.png}{\includegraphics[width=0.45\textwidth]{figures/shap_summary_plot.png}}{\fbox{\parbox{0.42\textwidth}{Figura no disponible. Ejecute el notebook 04 para generar \texttt{shap\_summary\_plot.png}.}}}}
+\centerline{\IfFileExists{figures/summary_plot.png}{\includegraphics[width=0.45\textwidth]{figures/summary_plot.png}}{\fbox{\parbox{0.42\textwidth}{Figura no disponible. Ejecute el notebook 04 para generar \texttt{summary\_plot.png}.}}}}
 \caption{Resumen global de importancia de variables mediante SHAP.}
 \label{fig:shap_summary}
 \end{figure}
 
 \begin{figure}[htbp]
-\centerline{\IfFileExists{figures/shap_bar_plot.png}{\includegraphics[width=0.45\textwidth]{figures/shap_bar_plot.png}}{\fbox{\parbox{0.42\textwidth}{Figura no disponible. Ejecute el notebook 04 para generar \texttt{shap\_bar\_plot.png}.}}}}
+\centerline{\IfFileExists{figures/bar_plot.png}{\includegraphics[width=0.45\textwidth]{figures/bar_plot.png}}{\fbox{\parbox{0.42\textwidth}{Figura no disponible. Ejecute el notebook 04 para generar \texttt{bar\_plot.png}.}}}}
 \caption{Ranking de variables más influyentes según valores SHAP.}
 \label{fig:shap_bar}
 \end{figure}
@@ -188,8 +190,6 @@ Como trabajo futuro se propone evaluar el modelo en datasets médicos más ampli
 El presente estudio permitió comparar modelos interpretables y modelos más complejos para la detección temprana de enfermedades cardiovasculares. SVM obtuvo el mayor ROC-AUC en el conjunto de prueba, con un valor de 0.959; sin embargo, la regresión logística presentó un desempeño competitivo, con un ROC-AUC de 0.958, y mayor capacidad de interpretación.
 
 La aplicación de SHAP sobre la regresión logística permitió identificar factores relevantes en la predicción, destacando variables como \textit{ca}, \textit{cp}, \textit{thal}, \textit{sex} y \textit{slope}. Estos resultados evidencian que la combinación de modelos interpretables con técnicas de inteligencia artificial explicable puede contribuir al desarrollo de sistemas de apoyo a la decisión clínica más transparentes, auditables y alineados con principios de IA responsable.
-
-\section*{Referencias}
 
 \begin{thebibliography}{00}
 
